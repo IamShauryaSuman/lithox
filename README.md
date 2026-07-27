@@ -8,10 +8,10 @@
 
 ## 🚀 Current Status
 
-**Phase 1 (Storage) and Phase 2 (Memory Management) are complete.** 
-The database can currently allocate, read, and write 4KB pages to disk, and efficiently cache them in memory using a Clock Replacer eviction policy and interior mutability (`Arc<RwLock<T>>`) for thread-safe access. 
+**Phase 1 (Storage), Phase 2 (Memory Management), and Phase 3 (Serialization) are complete.** 
+The database can currently allocate, read, and write 4KB pages to disk, efficiently cache them using a Clock Replacer, and perform high-performance, zero-copy serialization of complex B+ Tree nodes over raw memory blocks using `bytemuck`.
 
-**Next up:** Phase 3 - B+ Tree Node Serialization (Encoding/Decoding 24-byte headers and payloads).
+**Next up:** Phase 4 - B+ Tree Logic (Search, Insert with recursive splitting, Delete).
 
 ## 🏗️ Architecture overview
 

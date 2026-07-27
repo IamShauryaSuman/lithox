@@ -1,6 +1,7 @@
 use crate::disk_manager::{PAGE_SIZE, PageId};
 
 /// Represents a single page in memory.
+#[repr(C, align(8))]
 pub struct Page {
     /// The actual raw data from the disk.
     data: [u8; PAGE_SIZE],

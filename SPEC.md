@@ -68,7 +68,7 @@ Data must be serialized into 4KB byte arrays.
 ## 5. Development Phases
 1. **Phase 1: Storage Engine Bootstrap** - Implement `DiskManager` and standard `Page` definitions. *(Complete)*
 2. **Phase 2: Memory Management** - Implement `BufferPoolManager` with a `ClockReplacer`. *(Complete)*
-3. **Phase 3: Serialization/Deserialization** - Write utilities to convert Rust structs to/from 4KB `[u8; 4096]` arrays. *(Pending)*
+3. **Phase 3: Serialization/Deserialization** - Write utilities to convert Rust structs to/from 4KB `[u8; 4096]` arrays. *(Complete)*
 4. **Phase 4: B+ Tree Logic** - Implement Search, Insert (with splitting), and Delete (with merging). *(Pending)*
 5. **Phase 5: Concurrency Control** - Add page-level read/write latches (`RwLock`) and implement crabbing. *(Pending)*
 
