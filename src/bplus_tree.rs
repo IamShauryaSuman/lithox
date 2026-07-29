@@ -100,7 +100,7 @@ impl BPlusTree {
             use bytemuck::from_bytes_mut;
             let leaf_node: &mut crate::node::LeafNode = from_bytes_mut(page_data);
 
-            if let Err(_) = leaf_node.insert_kv(key, value) {
+            if leaf_node.insert_kv(key, value).is_err() {
                 needs_split = true;
             }
         }
@@ -604,16 +604,16 @@ impl BPlusTree {
             bpm.unpin_page(leaf_page_id, false);
         }
 
-        if prev_page_id != 0 {
-            if self.attempt_leaf_borrow_left(leaf_page_id, prev_page_id, parent_id, min_keys) {
-                return;
-            }
+        if prev_page_id != 0
+            && self.attempt_leaf_borrow_left(leaf_page_id, prev_page_id, parent_id, min_keys)
+        {
+            return;
         }
 
-        if next_page_id != 0 {
-            if self.attempt_leaf_borrow_right(leaf_page_id, next_page_id, parent_id, min_keys) {
-                return;
-            }
+        if next_page_id != 0
+            && self.attempt_leaf_borrow_right(leaf_page_id, next_page_id, parent_id, min_keys)
+        {
+            return;
         }
 
         self.merge_leaf_nodes(leaf_page_id, prev_page_id, next_page_id, parent_id);
@@ -771,19 +771,19 @@ impl BPlusTree {
             return;
         }
 
-        if let Some(child_id) = new_root_id {
-            if child_id != root_page_id {
-                *self.root_page_id.write().unwrap() = Some(child_id);
+        if let Some(child_id) = new_root_id
+            && child_id != root_page_id
+        {
+            *self.root_page_id.write().unwrap() = Some(child_id);
 
-                let child_arc = bpm.fetch_page(child_id).unwrap();
-                {
-                    let mut child_page = child_arc.write().unwrap();
-                    let header: &mut crate::node::BPlusTreeHeader =
-                        bytemuck::from_bytes_mut(&mut child_page.get_data_mut()[0..24]);
-                    header.parent_id = 0;
-                }
-                bpm.unpin_page(child_id, true);
+            let child_arc = bpm.fetch_page(child_id).unwrap();
+            {
+                let mut child_page = child_arc.write().unwrap();
+                let header: &mut crate::node::BPlusTreeHeader =
+                    bytemuck::from_bytes_mut(&mut child_page.get_data_mut()[0..24]);
+                header.parent_id = 0;
             }
+            bpm.unpin_page(child_id, true);
         }
     }
 
@@ -985,26 +985,26 @@ impl BPlusTree {
             bpm.unpin_page(parent_id, false);
         }
 
-        if left_sibling_id != 0 {
-            if self.attempt_internal_borrow_left(
+        if left_sibling_id != 0
+            && self.attempt_internal_borrow_left(
                 internal_page_id,
                 left_sibling_id,
                 parent_id,
                 min_keys,
-            ) {
-                return;
-            }
+            )
+        {
+            return;
         }
 
-        if right_sibling_id != 0 {
-            if self.attempt_internal_borrow_right(
+        if right_sibling_id != 0
+            && self.attempt_internal_borrow_right(
                 internal_page_id,
                 right_sibling_id,
                 parent_id,
                 min_keys,
-            ) {
-                return;
-            }
+            )
+        {
+            return;
         }
 
         self.merge_internal_nodes(
