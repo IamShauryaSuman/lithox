@@ -21,6 +21,7 @@ Responsible for raw file I/O operations.
   - `read_page(page_id: PageId) -> Result<Page, Error>`
   - `write_page(page_id: PageId, page: &Page) -> Result<(), Error>`
   - `allocate_page() -> PageId`
+  - `deallocate_page(page_id: PageId)` (Uses an intrusive linked list via Page 0 for O(1) recycling).
 
 ### 3.2. Buffer Pool Manager (Caching Layer)
 Acts as the middleman between memory and disk, minimizing slow disk I/O.
@@ -69,8 +70,9 @@ Data must be serialized into 4KB byte arrays.
 1. **Phase 1: Storage Engine Bootstrap** - Implement `DiskManager` and standard `Page` definitions. *(Complete)*
 2. **Phase 2: Memory Management** - Implement `BufferPoolManager` with a `ClockReplacer`. *(Complete)*
 3. **Phase 3: Serialization/Deserialization** - Write utilities to convert Rust structs to/from 4KB `[u8; 4096]` arrays. *(Complete)*
-4. **Phase 4: B+ Tree Logic** - Implement Search, Insert (with splitting), and Delete (with merging). *(Pending)*
-5. **Phase 5: Concurrency Control** - Add page-level read/write latches (`RwLock`) and implement crabbing. *(Pending)*
+4. **Phase 4: B+ Tree Logic** - Implement Search, Insert (with splitting), and Delete (with merging, borrowing, and dynamic root collapsing). *(Complete)*
+5. **Phase 5: Database REPL (v0.2.0)** - Build an interactive terminal prompt to query and manipulate the database in real-time. *(Pending)*
+6. **Phase 6: Concurrency Control (v0.3.0)** - Add page-level read/write latches (`RwLock`) and implement crabbing. *(Pending)*
 
 ## 6. References & Inspiration
 - CMU 15-445 Database Systems (BusTub Architecture)
